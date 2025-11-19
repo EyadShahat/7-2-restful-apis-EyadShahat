@@ -6,7 +6,16 @@ const songSchema = new mongoose.Schema({
   year:   { type: Number, min: 1900, max: 2100 }
 }, { timestamps: true });
 
-// db schema
-
+// Convert _id → id and remove __v from responses
+songSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: (_doc, ret) => {
+    ret.id = ret._id.toString();
+    delete ret._id;
+    return ret;
+  }
+});
 
 export const Song = mongoose.model("Song", songSchema);
+
